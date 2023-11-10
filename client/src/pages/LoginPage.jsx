@@ -1,65 +1,132 @@
-import { useAuth } from "../context/authContext";
-import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { useEffect } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, Message, Button, Input, Label } from "../components/ui";
-import { loginSchema } from "../schemas/auth";
+import { useForm } from 'react-hook-form'
+import { useAuth } from '../context/authContext';
+import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
-export function LoginPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(loginSchema),
-  });
-  const { signin, errors: loginErrors, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
 
-  const onSubmit = (data) => signin(data);
+function LoginPage() {
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/tasks");
-    }
-  }, [isAuthenticated]);
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
-  return (
-    <div className="h-[calc(100vh-100px)] flex items-center justify-center">
-      <Card>
-        {loginErrors.map((error, i) => (
-          <Message message={error} key={i} />
-        ))}
-        <h1 className="text-2xl font-bold">Login</h1>
+    const { signin, isAuthenticated, errors: signinErrors } = useAuth();
+    const navigate = useNavigate()
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Label htmlFor="email">Email:</Label>
-          <Input
-            label="Write your email"
-            type="email"
-            name="email"
-            placeholder="youremail@domain.tld"
-            {...register("email", { required: true })}
-          />
-          <p>{errors.email?.message}</p>
+    const onSubmit = handleSubmit((data) => {
+        signin(data);
 
-          <Label htmlFor="password">Password:</Label>
-          <Input
-            type="password"
-            name="password"
-            placeholder="Write your password"
-            {...register("password", { required: true, minLength: 6 })}
-          />
-          <p>{errors.password?.message}</p>
+    });
 
-          <Button>Login</Button>
-        </form>
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate("/empleados")
+        }
+    }, [isAuthenticated])
 
-        <p className="flex gap-x-2 justify-between">
-          Don't have an account? <Link to="/register" className="text-sky-500">Sign up</Link>
-        </p>
-      </Card>
-    </div>
-  );
+
+
+
+    return (
+
+        <>
+
+            <div>
+
+
+                {
+                    signinErrors.map((error, i) => (
+                        <div className='bg-red-500 p-2 text-center text-white content-center' key={i}>
+                            {error}
+                        </div>
+                    ))
+                }
+
+
+                <div className='divPrincipal'>
+
+
+
+                    <div className='imageBackground'>
+
+
+
+
+                    </div>
+
+
+                    <div className="cardLogin">
+                        <div className="circle"></div>
+                        <div className="circle"></div>
+                        <div className="card-inner">
+
+                            <div className='containerRegister'>
+
+
+                                <form
+
+
+                                    onSubmit={onSubmit}>
+
+                                    <h1 className='textLogin'>Ingreso J&M</h1>
+
+
+                                    <div className="inputs">
+                                        <label>Correo</label><br />
+                                        <input type="email" className='input' placeholder='Correo'{...register('email', { required: true })} />
+                                    </div>
+
+                                    {
+                                        errors.email && (
+                                            <p className='text-red-500'>Se requiere el correo</p>
+                                        )
+                                    }
+
+
+                                    <div className="inputs">
+                                        <label>Contraseña</label><br />
+                                        <input type="password" className='input' placeholder='Contraseña'{...register('contrasena', { required: true })} />
+                                    </div>
+
+                                    {
+                                        errors.contrasena && (
+                                            <p className='text-red-500'>Se requiere la contraseña</p>
+                                        )
+                                    }
+
+
+
+
+
+
+
+                                    <button id='btn' className='button' type='submit'>Ingresar</button>
+
+                                    <p>
+                                        ¿No tienes una cuenta? <Link to="/register" className='textLoginAndRegister'>Regístrate</Link>
+                                    </p>
+
+                                    <p>
+                                        <Link to="/send-password-reset-email" className='textLoginAndRegister'>Olvidé mi contraseña</Link>
+                                    </p>
+
+
+                                </form>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div >
+            </div>
+
+            <Toaster position="top-right"
+                reverseOrder={false} />
+
+        </>
+    )
 }
+
+export default LoginPage;

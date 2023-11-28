@@ -13,7 +13,7 @@ import { createPedidoSchema } from "../schemas/pedidos.schema.js";
 
 const router = Router()
 
-router.get('/pedidos',authRequired,getPedidos)
+router.get('/pedidos',getPedidos)
 router.get('/pedidos/:id',authRequired, getIdPedido)
 router.post('/pedidos',authRequired,validateSchema(createPedidoSchema),createPedido)
 router.put('/pedidos/:id',[authRequired, isGerenteOPropietario], updatePedido);

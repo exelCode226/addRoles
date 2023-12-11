@@ -10,9 +10,9 @@ router.get("/empleados", getEmpleados);
 
 router.post("/empleados", createEmpleado);
 
-router.get("/empleados/:id",authRequired, getEmpleado);
+router.get("/empleados/:id", getEmpleado);
 
-router.put("/empleados/:id", authRequired, updateEmpleado);
+router.put("/empleados/:id",  updateEmpleado);
 
 router.delete("/empleados/:id", authRequired, deleteEmpleado);
 
